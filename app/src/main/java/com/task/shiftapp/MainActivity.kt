@@ -57,7 +57,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListeners() = with(binding) {
         btnAddUsers.setOnClickListener {
-            if (isAddPressed) {
+            if (users.size >= 100) {
+                Toast.makeText(this@MainActivity, "Список полон", Toast.LENGTH_SHORT).show()
+            } else if (isAddPressed) {
                 val count = edUserCount.text.toString().toIntOrNull() ?: 1
                 if (count in 1..20) {
                     addUsersToRC(count)
