@@ -33,9 +33,15 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
+
+    // Picasso
+    implementation(libs.picasso)
 
     // Retrofit
     implementation(libs.retrofit)
