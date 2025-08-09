@@ -1,5 +1,6 @@
 package com.task.shiftapp
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -9,6 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.task.shiftapp.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,11 +19,14 @@ import kotlinx.coroutines.launch
 import com.task.shiftapp.data.api.ApiClient.Companion.api
 import com.task.shiftapp.data.model.user.User
 import com.task.shiftapp.ui.UserAdapter
+import com.task.shiftapp.utils.Constants.USER_LIST_KEY
+import com.task.shiftapp.utils.Constants.USER_PREF
 import kotlinx.coroutines.withContext
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var sharedPrefs: SharedPreferences
     private val adapter = UserAdapter()
     private val users = mutableListOf<User>()
     private var isAddPressed = false
@@ -29,6 +35,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        sharedPrefs = getSharedPreferences(USER_PREF, MODE_PRIVATE)
+        loadUsers()
 
         setupRecyclerView()
         setupClickListeners()
@@ -48,7 +57,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListeners() = with(binding) {
         btnAddUsers.setOnClickListener {
-            if (isAddPressed) {
+            if (users.size >= 100) {
+                Toast.makeText(this@MainActivity, "Список полон", Toast.LENGTH_SHORT).show()
+            } else if (isAddPressed) {
                 val count = edUserCount.text.toString().toIntOrNull() ?: 1
                 if (count in 1..20) {
                     addUsersToRC(count)
@@ -79,6 +90,7 @@ class MainActivity : AppCompatActivity() {
                     users.clear()
                     users.addAll(updatedList)
                     adapter.submitList(updatedList)
+                    saveUsers()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -92,8 +104,9 @@ class MainActivity : AppCompatActivity() {
         if (users.isNotEmpty()) {
             users.clear()
             adapter.submitList(emptyList())
+            saveUsers()
         } else {
-            Toast.makeText(this, "Список пуст.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Список пуст", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -123,4 +136,26 @@ class MainActivity : AppCompatActivity() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.edUserCount.windowToken, 0)
     }
+
+    private fun loadUsers() {
+        val json = sharedPrefs.getString(USER_LIST_KEY, null)
+        if (!json.isNullOrEmpty()) {
+            val type = object : TypeToken<List<User>>() {}.type
+            val savedUsers = Gson().fromJson<List<User>>(json, type)
+            users.clear()
+            users.addAll(savedUsers)
+            adapter.submitList(users.toList())
+        }
+    }
+
+    private fun saveUsers() {
+        val json = Gson().toJson(users)
+        sharedPrefs.edit().putString(USER_LIST_KEY, json).apply()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveUsers()
+    }
+
 }
