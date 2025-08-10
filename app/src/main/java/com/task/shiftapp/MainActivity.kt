@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import com.task.shiftapp.data.api.ApiClient.Companion.api
 import com.task.shiftapp.data.model.user.User
 import com.task.shiftapp.ui.UserAdapter
+import com.task.shiftapp.ui.UserClickListener
 import com.task.shiftapp.utils.Constants.USER_LIST_KEY
 import com.task.shiftapp.utils.Constants.USER_PREF
 import kotlinx.coroutines.withContext
@@ -27,9 +28,15 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPrefs: SharedPreferences
-    private val adapter = UserAdapter()
     private val users = mutableListOf<User>()
     private var isAddPressed = false
+    private val adapter by lazy {
+        UserAdapter(object : UserClickListener {
+            override fun onUserClickListener(user: User) {
+                Toast.makeText(this@MainActivity, user.name.toString(), Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +50,11 @@ class MainActivity : AppCompatActivity() {
         setupClickListeners()
     }
 
-    private fun setupRecyclerView() = with(binding.rcUsers) {
-        layoutManager = LinearLayoutManager(this@MainActivity)
-        adapter = this@MainActivity.adapter
+    private fun setupRecyclerView() = with(binding) {
+        rcUsers.layoutManager = LinearLayoutManager(this@MainActivity)
+        rcUsers.adapter = this@MainActivity.adapter
 
-        addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+        rcUsers.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
             override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
                 hideInputAndClear()
                 return false
