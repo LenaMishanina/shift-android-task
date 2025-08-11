@@ -1,5 +1,8 @@
 package com.task.shiftapp
 
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -31,6 +34,10 @@ class ProfileActivity : AppCompatActivity() {
 
         loadProfile(user)
         setupBackPressHandler()
+
+        binding.tvPhone.setOnClickListener {
+            dialPhoneNumber(user.phone)
+        }
     }
 
     private fun getUserFromIntent(): User? {
@@ -78,5 +85,22 @@ class ProfileActivity : AppCompatActivity() {
                 finish()
             }
         })
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun dialPhoneNumber(phoneNumber: String) {
+        try {
+            val cleanedNumber = phoneNumber.replace(Regex("[^+0-9]"), "")
+
+            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$cleanedNumber"))
+
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, resources.getString(R.string.no_dialer_found), Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, resources.getString(R.string.error_fail_dialer), Toast.LENGTH_SHORT).show()
+        }
     }
 }

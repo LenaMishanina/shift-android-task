@@ -5,4 +5,6 @@
     <string name="list_is_empty">The list of users is full</string>
     <string name="age_end">years old</string>
     <string name="error_upload_data">Error: uploading data</string>
+    <string name="no_dialer_found">No dialer app found</string>
+    <string name="error_fail_dialer">Error: failed to dial number</string>
 </resources>
