@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -45,8 +44,8 @@ class ProfileActivity : AppCompatActivity() {
             sendEmailApp(user.email)
         }
 
-        binding.tvLocation.setOnClickListener {
-            openMapByCoordinates(user.location.coordinates.latitude, user.location.coordinates.longitude)
+        binding.layoutAddress.setOnClickListener {
+            openMapByLocation(user.location)
         }
     }
 
@@ -152,4 +151,38 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun openMapByLocation(location: Location) {
+        try {
+            val fullAddress = buildString {
+                append(location.street.number.toString())
+                append(" ")
+                append(location.street.name)
+                append(", ")
+                append(location.city)
+                append(", ")
+                append(location.state)
+                append(", ")
+                append(location.country)
+                append(" ")
+                append(location.postcode)
+            }.trim().replace(" ", "+")
+
+            val geoUri = Uri.parse("geo:0,0?q=$fullAddress")
+
+            val chooserIntent = Intent(Intent.ACTION_VIEW, geoUri).let {
+                Intent.createChooser(it, resources.getString(R.string.chooser_intent))
+            }
+
+            if (chooserIntent.resolveActivity(packageManager) != null) {
+                startActivity(chooserIntent)
+            } else {
+                val webUri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$fullAddress")
+                startActivity(Intent(Intent.ACTION_VIEW, webUri))
+            }
+
+        } catch (e: Exception) {
+            Toast.makeText(this@ProfileActivity, resources.getString(R.string.error_fail_map_open), Toast.LENGTH_SHORT).show()
+        }
+    }
 }
