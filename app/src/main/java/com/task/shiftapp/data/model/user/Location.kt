@@ -12,7 +12,7 @@ data class Location(
     val postcode: String,
 ): Parcelable {
     override fun toString(): String {
-        return "${street.number} ${street.name}, $city"
+        return "$street, $city"
     }
 
     override fun describeContents(): Int {
@@ -53,6 +53,10 @@ data class Street(
     val number: Int,
     val name: String,
 ): Parcelable {
+    override fun toString(): String {
+        return "$number $name St"
+    }
+
     override fun describeContents(): Int {
         return 0
     }
