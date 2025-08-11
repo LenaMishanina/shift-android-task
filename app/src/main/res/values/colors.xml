@@ -2,4 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="background">#9AFFF3D2</color>
+    <color name="header_card_bg">#6D73D8</color>
+    <color name="profile_name_text">#FFFFFF</color>
+    <color name="profile_email_text">#FFEB3B</color>
+    <color name="profile_detail_icon">#434685</color>
+    <color name="detail_text_primary">#D5434685</color>
+    <color name="detail_text_secondary">#AF434685</color>
+    <color name="profile_divider">#5D5A5A</color>
+    <color name="placeholder_user">#78367D</color>
+    <color name="border_picture">#FFF06C</color>
 </resources>
