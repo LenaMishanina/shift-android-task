@@ -6,7 +6,7 @@
     android:id="@+id/clMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D5D1D1"
+    android:background="@color/background"
     tools:context=".MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -25,7 +25,7 @@
         android:id="@+id/edUserCount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Введите от 1 до 20"
+        android:hint="@string/enter_user_count"
         android:inputType="number"
         android:padding="20dp"
         android:visibility="gone"
@@ -37,17 +37,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:backgroundTint="#B7C7D1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:tint="#2C536A"
+        app:srcCompat="@drawable/ic_plus_1" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnRemoveUsers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:backgroundTint="#B7C7D1"
         app:layout_constraintBottom_toTopOf="@id/btnAddUsers"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_delete"/>
+        app:tint="#2C536A"
+        app:srcCompat="@drawable/ic_trash_2"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

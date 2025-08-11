@@ -1,6 +1,5 @@
 package com.task.shiftapp.ui
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import com.task.shiftapp.R
 import com.task.shiftapp.data.model.user.User
 import com.task.shiftapp.databinding.UserItemBinding
 
-class UserAdapter: ListAdapter<User, UserAdapter.Holder>(Comparator()) {
+class UserAdapter(private val clickListener: UserClickListener): ListAdapter<User, UserAdapter.Holder>(Comparator()) {
     class Holder(view: View): RecyclerView.ViewHolder(view) {
         private val binding = UserItemBinding.bind(view)
         fun bind(user: User) = with(binding) {
@@ -22,7 +21,8 @@ class UserAdapter: ListAdapter<User, UserAdapter.Holder>(Comparator()) {
             tvEmail.text = user.email
             Picasso.get()
                 .load(user.picture.medium)
-                .placeholder(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.ic_user)
+                .error(R.drawable.ic_user)
                 .into(ivProfile)
         }
     }
@@ -45,6 +45,12 @@ class UserAdapter: ListAdapter<User, UserAdapter.Holder>(Comparator()) {
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.bind(getItem(position))
+        val user = getItem(position)
+        holder.apply {
+            bind(user)
+            itemView.setOnClickListener {
+                clickListener.onUserClickListener(user)
+            }
+        }
     }
 }

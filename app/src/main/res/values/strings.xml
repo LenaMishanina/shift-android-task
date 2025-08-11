@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ShiftApp</string>
+    <string name="enter_user_count">Enter a number from 1 to 20</string>
+    <string name="list_is_full">The list of users is full</string>
+    <string name="list_is_empty">The list of users is full</string>
+    <string name="age_end">years old</string>
+    <string name="error_upload_data">Error: uploading data</string>
 </resources>

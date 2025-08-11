@@ -1,8 +1,8 @@
 package com.task.shiftapp
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -19,17 +19,26 @@ import kotlinx.coroutines.launch
 import com.task.shiftapp.data.api.ApiClient.Companion.api
 import com.task.shiftapp.data.model.user.User
 import com.task.shiftapp.ui.UserAdapter
+import com.task.shiftapp.ui.UserClickListener
+import com.task.shiftapp.utils.Constants.EXTRA_USER_KEY
 import com.task.shiftapp.utils.Constants.USER_LIST_KEY
 import com.task.shiftapp.utils.Constants.USER_PREF
 import kotlinx.coroutines.withContext
 
-
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPrefs: SharedPreferences
-    private val adapter = UserAdapter()
     private val users = mutableListOf<User>()
     private var isAddPressed = false
+    private val adapter by lazy {
+        UserAdapter(object : UserClickListener {
+            override fun onUserClickListener(user: User) {
+                val intent = Intent(this@MainActivity, ProfileActivity::class.java)
+                intent.putExtra(EXTRA_USER_KEY, user)
+                startActivity(intent)
+            }
+        })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +52,11 @@ class MainActivity : AppCompatActivity() {
         setupClickListeners()
     }
 
-    private fun setupRecyclerView() = with(binding.rcUsers) {
-        layoutManager = LinearLayoutManager(this@MainActivity)
-        adapter = this@MainActivity.adapter
+    private fun setupRecyclerView() = with(binding) {
+        rcUsers.layoutManager = LinearLayoutManager(this@MainActivity)
+        rcUsers.adapter = this@MainActivity.adapter
 
-        addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+        rcUsers.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
             override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
                 hideInputAndClear()
                 return false
@@ -58,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupClickListeners() = with(binding) {
         btnAddUsers.setOnClickListener {
             if (users.size >= 100) {
-                Toast.makeText(this@MainActivity, "Список полон", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, resources.getString(R.string.list_is_full), Toast.LENGTH_SHORT).show()
             } else if (isAddPressed) {
                 val count = edUserCount.text.toString().toIntOrNull() ?: 1
                 if (count in 1..20) {
@@ -94,7 +103,7 @@ class MainActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, resources.getString(R.string.error_upload_data), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -106,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(emptyList())
             saveUsers()
         } else {
-            Toast.makeText(this, "Список пуст", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, resources.getString(R.string.list_is_empty), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -157,5 +166,4 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         saveUsers()
     }
-
 }

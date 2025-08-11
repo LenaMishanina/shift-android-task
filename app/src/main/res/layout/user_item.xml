@@ -13,53 +13,65 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="12dp"
+        android:gravity="center"
+        android:background="@color/header_card_bg">
 
         <ImageView
             android:id="@+id/ivProfile"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="87dp"
+            android:layout_height="90dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_background"
-            tools:src="@tools:sample/avatars" />
+            android:background="@drawable/profile_picture"
+            android:src="@drawable/ic_user" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/tvName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                tools:text="Jennie Nichols" />
+                tools:text="Jennie Nichols"
+                android:textColor="@color/detail_text_primary"
+                android:fontFamily="sans-serif-condensed"/>
 
             <TextView
                 android:id="@+id/tvAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textSize="14sp"
-                tools:text="8929 Valwood Pkwy, Billings, Michigan" />
+                android:textSize="12sp"
+                tools:text="8929 Valwood Pkwy, Billings"
+                android:textColor="@color/detail_text_secondary"
+                android:fontFamily="sans-serif-condensed"/>
 
             <TextView
                 android:id="@+id/tvPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textSize="14sp"
-                tools:text="(272) 790-0888" />
+                android:textSize="12sp"
+                tools:text="(272) 790-0888"
+                android:textColor="@color/detail_text_secondary"
+                android:fontFamily="sans-serif-condensed"/>
 
             <TextView
                 android:id="@+id/tvEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textSize="14sp"
-                tools:text="jennie.nichols@example.com" />
+                android:textSize="12sp"
+                android:textColor="@color/detail_text_secondary"
+                tools:text="jennie.nichols@example.com"
+                android:fontFamily="sans-serif-condensed"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
