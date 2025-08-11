@@ -9,6 +9,7 @@ data class User (
     val name: Name,
     val location: Location,
     val email: String,
+    val dob: DateOfBirth,
     val phone: String,
     val picture: Picture,
 ): Parcelable {
@@ -22,6 +23,7 @@ data class User (
             writeParcelable(name, flags)
             writeParcelable(location, flags)
             writeString(email)
+            writeParcelable(dob, flags)
             writeString(phone)
             writeParcelable(picture, flags)
         }
@@ -32,6 +34,7 @@ data class User (
         name = dest.readParcelableWithVersionChecking<Name>()!!,
         location = dest.readParcelableWithVersionChecking<Location>()!!,
         email = dest.readString().toString(),
+        dob = dest.readParcelableWithVersionChecking<DateOfBirth>()!!,
         phone = dest.readString().toString(),
         picture = dest.readParcelableWithVersionChecking<Picture>()!!,
     )
