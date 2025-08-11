@@ -1,6 +1,5 @@
 package com.task.shiftapp.ui
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,8 @@ class UserAdapter(private val clickListener: UserClickListener): ListAdapter<Use
             tvEmail.text = user.email
             Picasso.get()
                 .load(user.picture.medium)
-                .placeholder(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.ic_user)
+                .error(R.drawable.ic_user)
                 .into(ivProfile)
         }
     }
