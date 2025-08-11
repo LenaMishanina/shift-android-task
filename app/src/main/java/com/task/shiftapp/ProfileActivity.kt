@@ -38,6 +38,10 @@ class ProfileActivity : AppCompatActivity() {
         binding.tvPhone.setOnClickListener {
             dialPhoneNumber(user.phone)
         }
+
+        binding.tvEmail.setOnClickListener {
+            sendEmailApp(user.email)
+        }
     }
 
     private fun getUserFromIntent(): User? {
@@ -101,6 +105,24 @@ class ProfileActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             Toast.makeText(this, resources.getString(R.string.error_fail_dialer), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun sendEmailApp(email: String) {
+        try {
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+                type = "message/rfc822"
+            }
+
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+            } else {
+                Toast.makeText(this@ProfileActivity, resources.getString(R.string.no_email_send_found), Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this@ProfileActivity, resources.getString(R.string.error_fail_email_send), Toast.LENGTH_SHORT).show()
         }
     }
 }
