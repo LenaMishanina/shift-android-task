@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupClickListeners() = with(binding) {
         btnAddUsers.setOnClickListener {
             if (users.size >= 100) {
-                Toast.makeText(this@MainActivity, "Список полон", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, resources.getString(R.string.list_is_full), Toast.LENGTH_SHORT).show()
             } else if (isAddPressed) {
                 val count = edUserCount.text.toString().toIntOrNull() ?: 1
                 if (count in 1..20) {
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, resources.getString(R.string.error_upload_data), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(emptyList())
             saveUsers()
         } else {
-            Toast.makeText(this, "Список пуст", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, resources.getString(R.string.list_is_empty), Toast.LENGTH_SHORT).show()
         }
     }
 

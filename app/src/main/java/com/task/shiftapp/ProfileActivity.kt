@@ -24,7 +24,7 @@ class ProfileActivity : AppCompatActivity() {
         val user = getUserFromIntent()
 
         if (user == null) {
-            Toast.makeText(this@ProfileActivity, "Пользователей не найден", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@ProfileActivity, resources.getString(R.string.error_upload_data), Toast.LENGTH_SHORT).show()
             finish()
             return
         }
@@ -47,7 +47,7 @@ class ProfileActivity : AppCompatActivity() {
         tvGender.text = user.gender
         tvPhone.text = user.phone
         tvEmail.text = user.email
-        val age = "${user.dob.age} years old"
+        val age = "${user.dob.age} ${resources.getString(R.string.age_end)}"
         tvAge.text = age
         tvDoB.text = formatDate(user.dob.date)
         tvStreet.text = user.location.street.toString()
