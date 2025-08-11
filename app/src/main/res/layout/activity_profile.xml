@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
+            android:clickable="true"
             android:text="ckent@dailyplanet.com"
             android:textColor="@color/profile_email_text"
             android:textSize="16sp"
@@ -152,6 +153,7 @@
                 app:tint="@color/profile_detail_icon" />
 
             <LinearLayout
+                android:id="@+id/layoutAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -206,6 +208,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:clickable="true"
                 android:paddingLeft="20dp"
                 android:text="555-0199"
                 android:textColor="@color/detail_text_primary"

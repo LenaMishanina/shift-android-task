@@ -10,6 +10,7 @@ data class Location(
     val state: String,
     val country: String,
     val postcode: String,
+    val coordinates: Coordinate,
 ): Parcelable {
     override fun toString(): String {
         return "$street, $city"
@@ -26,6 +27,7 @@ data class Location(
             writeString(state)
             writeString(country)
             writeString(postcode)
+            writeParcelable(coordinates, flags)
         }
     }
 
@@ -35,6 +37,7 @@ data class Location(
         state = dest.readString().toString(),
         country = dest.readString().toString(),
         postcode = dest.readString().toString(),
+        coordinates = dest.readParcelableWithVersionChecking<Coordinate>()!!,
     )
 
     companion object CREATOR : Parcelable.Creator<Location> {
@@ -79,6 +82,38 @@ data class Street(
         }
 
         override fun newArray(size: Int): Array<Street?> {
+            return arrayOfNulls(size)
+        }
+    }
+
+}
+
+data class Coordinate(
+    val latitude: String,
+    val longitude: String,
+): Parcelable {
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.apply {
+            writeString(latitude)
+            writeString(longitude)
+        }
+    }
+
+    constructor(dest: Parcel): this(
+        latitude = dest.readString().toString(),
+        longitude = dest.readString().toString(),
+    )
+
+    companion object CREATOR : Parcelable.Creator<Coordinate> {
+        override fun createFromParcel(dest: Parcel): Coordinate {
+            return Coordinate(dest)
+        }
+
+        override fun newArray(size: Int): Array<Coordinate?> {
             return arrayOfNulls(size)
         }
     }

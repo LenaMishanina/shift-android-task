@@ -1,11 +1,15 @@
 package com.task.shiftapp
 
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.picasso.Picasso
+import com.task.shiftapp.data.model.user.Location
 import com.task.shiftapp.data.model.user.User
 import com.task.shiftapp.databinding.ActivityProfileBinding
 import com.task.shiftapp.utils.Constants.EXTRA_USER_KEY
@@ -31,6 +35,18 @@ class ProfileActivity : AppCompatActivity() {
 
         loadProfile(user)
         setupBackPressHandler()
+
+        binding.tvPhone.setOnClickListener {
+            dialPhoneNumber(user.phone)
+        }
+
+        binding.tvEmail.setOnClickListener {
+            sendEmailApp(user.email)
+        }
+
+        binding.layoutAddress.setOnClickListener {
+            openMapByLocation(user.location)
+        }
     }
 
     private fun getUserFromIntent(): User? {
@@ -78,5 +94,95 @@ class ProfileActivity : AppCompatActivity() {
                 finish()
             }
         })
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun dialPhoneNumber(phoneNumber: String) {
+        try {
+            val cleanedNumber = phoneNumber.replace(Regex("[^+0-9]"), "")
+
+            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$cleanedNumber"))
+
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, resources.getString(R.string.no_dialer_found), Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, resources.getString(R.string.error_fail_dialer), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun sendEmailApp(email: String) {
+        try {
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+                type = "message/rfc822"
+            }
+
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+            } else {
+                Toast.makeText(this@ProfileActivity, resources.getString(R.string.no_email_send_found), Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this@ProfileActivity, resources.getString(R.string.error_fail_email_send), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun openMapByCoordinates(latitude: String, longitude: String) {
+        try {
+            val lat = latitude.toDouble()
+            val lng = longitude.toDouble()
+
+            val geoUri = Uri.parse("geo:$lat,$lng?q=$lat,$lng")
+            val chooserIntent = Intent(Intent.ACTION_VIEW, geoUri).let {
+                Intent.createChooser(it, resources.getString(R.string.chooser_intent))
+            }
+
+            if (chooserIntent.resolveActivity(packageManager) != null) {
+                startActivity(chooserIntent)
+            }
+
+        } catch (e: Exception) {
+            Toast.makeText(this@ProfileActivity, resources.getString(R.string.error_fail_map_open), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun openMapByLocation(location: Location) {
+        try {
+            val fullAddress = buildString {
+                append(location.street.number.toString())
+                append(" ")
+                append(location.street.name)
+                append(", ")
+                append(location.city)
+                append(", ")
+                append(location.state)
+                append(", ")
+                append(location.country)
+                append(" ")
+                append(location.postcode)
+            }.trim().replace(" ", "+")
+
+            val geoUri = Uri.parse("geo:0,0?q=$fullAddress")
+
+            val chooserIntent = Intent(Intent.ACTION_VIEW, geoUri).let {
+                Intent.createChooser(it, resources.getString(R.string.chooser_intent))
+            }
+
+            if (chooserIntent.resolveActivity(packageManager) != null) {
+                startActivity(chooserIntent)
+            } else {
+                val webUri = Uri.parse("https://www.google.com/maps/search/?api=1&query=$fullAddress")
+                startActivity(Intent(Intent.ACTION_VIEW, webUri))
+            }
+
+        } catch (e: Exception) {
+            Toast.makeText(this@ProfileActivity, resources.getString(R.string.error_fail_map_open), Toast.LENGTH_SHORT).show()
+        }
     }
 }
