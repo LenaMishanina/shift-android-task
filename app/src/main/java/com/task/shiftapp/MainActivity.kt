@@ -1,8 +1,8 @@
 package com.task.shiftapp
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -20,10 +20,10 @@ import com.task.shiftapp.data.api.ApiClient.Companion.api
 import com.task.shiftapp.data.model.user.User
 import com.task.shiftapp.ui.UserAdapter
 import com.task.shiftapp.ui.UserClickListener
+import com.task.shiftapp.utils.Constants.EXTRA_USER_KEY
 import com.task.shiftapp.utils.Constants.USER_LIST_KEY
 import com.task.shiftapp.utils.Constants.USER_PREF
 import kotlinx.coroutines.withContext
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -33,7 +33,9 @@ class MainActivity : AppCompatActivity() {
     private val adapter by lazy {
         UserAdapter(object : UserClickListener {
             override fun onUserClickListener(user: User) {
-                Toast.makeText(this@MainActivity, user.name.toString(), Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@MainActivity, ProfileActivity::class.java)
+                intent.putExtra(EXTRA_USER_KEY, user)
+                startActivity(intent)
             }
         })
     }
@@ -164,5 +166,4 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         saveUsers()
     }
-
 }
