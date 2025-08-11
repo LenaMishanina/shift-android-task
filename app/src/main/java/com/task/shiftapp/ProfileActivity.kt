@@ -5,10 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.picasso.Picasso
+import com.task.shiftapp.data.model.user.Location
 import com.task.shiftapp.data.model.user.User
 import com.task.shiftapp.databinding.ActivityProfileBinding
 import com.task.shiftapp.utils.Constants.EXTRA_USER_KEY
@@ -41,6 +43,10 @@ class ProfileActivity : AppCompatActivity() {
 
         binding.tvEmail.setOnClickListener {
             sendEmailApp(user.email)
+        }
+
+        binding.tvLocation.setOnClickListener {
+            openMapByCoordinates(user.location.coordinates.latitude, user.location.coordinates.longitude)
         }
     }
 
@@ -125,4 +131,25 @@ class ProfileActivity : AppCompatActivity() {
             Toast.makeText(this@ProfileActivity, resources.getString(R.string.error_fail_email_send), Toast.LENGTH_SHORT).show()
         }
     }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun openMapByCoordinates(latitude: String, longitude: String) {
+        try {
+            val lat = latitude.toDouble()
+            val lng = longitude.toDouble()
+
+            val geoUri = Uri.parse("geo:$lat,$lng?q=$lat,$lng")
+            val chooserIntent = Intent(Intent.ACTION_VIEW, geoUri).let {
+                Intent.createChooser(it, resources.getString(R.string.chooser_intent))
+            }
+
+            if (chooserIntent.resolveActivity(packageManager) != null) {
+                startActivity(chooserIntent)
+            }
+
+        } catch (e: Exception) {
+            Toast.makeText(this@ProfileActivity, resources.getString(R.string.error_fail_map_open), Toast.LENGTH_SHORT).show()
+        }
+    }
+
 }

@@ -4,6 +4,7 @@
     <!--  ui  -->
     <string name="enter_user_count">Enter a number from 1 to 20</string>
     <string name="age_end">years old</string>
+    <string name="chooser_intent">Select map app</string>
 
     <!--  toast  -->
     <string name="list_is_full">The list of users is full</string>
@@ -13,4 +14,5 @@
     <string name="error_fail_dialer">Error: failed to dial number</string>
     <string name="no_email_send_found">No email sending app found</string>
     <string name="error_fail_email_send">Error: failed to send email</string>
+    <string name="error_fail_map_open">Error: failed to open map</string>
 </resources>
